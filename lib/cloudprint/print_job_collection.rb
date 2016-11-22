@@ -17,6 +17,11 @@ module CloudPrint
       fetch_jobs.map { |j| new_from_response j }
     end
 
+    def limit(count)
+      options = { limit: count }
+      fetch_jobs(options).map { |j| new_from_response j }
+    end
+
     def new data
       PrintJob.new client, data
     end
@@ -33,8 +38,8 @@ module CloudPrint
 
     private
 
-    def fetch_jobs
-      response = client.connection.get('/jobs') || {}
+    def fetch_jobs(options={})
+      response = client.connection.get('/jobs', options) || {}
       response['jobs'] || []
     end
   end
